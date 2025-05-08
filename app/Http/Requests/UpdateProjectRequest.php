@@ -24,6 +24,7 @@ class UpdateProjectRequest extends FormRequest
         return [
             'name' => 'required|string|min:2',
             'description' => 'required|string|min:10',
+            'status' => 'nullable',
             'repository_url' => 'nullable|url',
         ];
     }

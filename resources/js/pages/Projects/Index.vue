@@ -20,6 +20,7 @@
                         <TableHead>Name</TableHead>
                         <TableHead>Description</TableHead>
                         <TableHead>Status</TableHead>
+                        <TableHead>Created at</TableHead>
                         <TableHead>Action</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -29,6 +30,7 @@
                         <TableCell> {{ project.name }} </TableCell>
                         <TableCell> {{ project.description }} </TableCell>
                         <TableCell> {{ project.status }} </TableCell>
+                        <TableCell> {{ project.created_at }} </TableCell>
                         <TableCell class="flex gap-3">
                             <Button @click="openEditDialog(project)">
                                 <PencilIcon />
@@ -49,7 +51,7 @@
                     <DialogTitle>Edit Project</DialogTitle>
                     <DialogDescription>Edit project details</DialogDescription>
                 </DialogHeader>
-                <form @submit.prevent="submitEdit" class="[&>div]:mb-4">
+                <form @submit.prevent="submitEdit" class="[&>div]:mb-4 min-w-full">
                     <div>
                         <Label>Name</Label>
                         <Input v-model="editForm.name" type="text" />
@@ -59,6 +61,19 @@
                         <Label>Description</Label>
                         <Input v-model="editForm.description" type="text" />
                         <InputError :message="editForm.errors.description" />
+                    </div>
+                    <div>
+                        <Label>Status</Label>
+                        <Select class="w-full" v-model="editForm.status">
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="active">Active</SelectItem>
+                                <SelectItem value="completed">Completed</SelectItem>
+                                <SelectItem value="archived">Archived</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
                     <div>
                         <Label>Repository URL (optional)</Label>
@@ -116,6 +131,13 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { toast } from 'vue-sonner';
@@ -123,6 +145,7 @@ import { toast } from 'vue-sonner';
 interface Project {
     id: string,
     name: string,
+    status: string,
     description: string,
     repository_url: string,
 }
@@ -138,6 +161,7 @@ const deleteForm = useForm({})
 const editForm = useForm({
     id: '',
     name: '',
+    status: '',
     description: '',
     repository_url: ''
 });
@@ -145,6 +169,7 @@ const editForm = useForm({
 const openEditDialog = (project: Project) => {
     editForm.id = project.id
     editForm.name = project.name
+    editForm.status = project.status
     editForm.description = project.description
     editForm.repository_url = project.repository_url
     isEditDialogOpen.value = true
