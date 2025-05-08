@@ -3,6 +3,8 @@
     <AppLayout>
         <template #title>Create Project</template>
         <template #desc> Lorem ipsum dolor, sit amet consectetur adipisicing elit. Blanditiis maiores cum eligendi. </template>
+        
+        <BackLink :href="route('dashboard.projects.index')" />
 
         <Card class="max-w-2xl">
             <form @submit.prevent="submit" class="[&>div]:mb-4" >
@@ -31,6 +33,7 @@
 
 <script setup lang="ts">
 import { Head, useForm } from '@inertiajs/vue3';
+import BackLink from '@/components/BackLink.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { toast } from 'vue-sonner';
 import Card from '@/components/Card.vue';
