@@ -29,7 +29,9 @@
                         <TableCell> {{ index + 1 }} </TableCell>
                         <TableCell> {{ project.name }} </TableCell>
                         <TableCell> {{ project.description }} </TableCell>
-                        <TableCell> {{ project.status }} </TableCell>
+                        <TableCell>
+                            <ProjectStatus :status="project.status" />
+                        </TableCell>
                         <TableCell> {{ project.created_at }} </TableCell>
                         <TableCell class="flex gap-3">
                             <Button @click="openEditDialog(project)">
@@ -117,6 +119,7 @@ import { ref } from 'vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import ButtonLink from '@/components/ButtonLink.vue';
+import ProjectStatus from '@/components/ProjectStatus.vue';
 import { Button } from "@/components/ui/button"
 import Card from '@/components/Card.vue';
 import InputError from '@/components/InputError.vue';
