@@ -21,6 +21,7 @@ class ProjectFactory extends Factory
             'name' => fake()->catchPhrase(),
             'description' => fake()->sentence(),
             'user_id' => User::all()->random()->id,
+            'status' => fake()->randomElement(['active', 'completed', 'archived']),
         ];
     }
 }
