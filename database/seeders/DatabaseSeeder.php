@@ -26,6 +26,6 @@ class DatabaseSeeder extends Seeder
             'user_id' => $user->id,
         ]);
 
-        User::factory(10)->has(Project::factory(10))->create();
+        User::factory(100)->has(Project::factory(20))->create();
     }
 }
