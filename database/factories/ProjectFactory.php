@@ -18,7 +18,7 @@ class ProjectFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->words(4, true),
+            'name' => fake()->catchPhrase(),
             'description' => fake()->sentence(),
             'user_id' => User::all()->random()->id,
         ];
