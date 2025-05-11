@@ -27,7 +27,9 @@
                 <TableBody>
                     <TableRow v-for="(project, index) in projects" :key="project">
                         <TableCell> {{ index + 1 }} </TableCell>
-                        <TableCell> {{ project.name }} </TableCell>
+                        <TableCell>
+                            <Link :href="route('dashboard.projects.show', project.id)"> {{ project.name }} </Link>
+                        </TableCell>
                         <TableCell> {{ project.description }} </TableCell>
                         <TableCell>
                             <ProjectStatus :status="project.status" />
@@ -116,7 +118,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, useForm, Link } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import ButtonLink from '@/components/ButtonLink.vue';
 import ProjectStatus from '@/components/ProjectStatus.vue';

@@ -27,5 +27,12 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::factory(100)->has(Project::factory(20))->create();
+        
+        foreach ($projects as $project) {
+            for($i = 0; $i < rand(7, 10); $i++) {
+                $project->members()->attach(User::all()->random()->id);
+            }
+        }
+
     }
 }
