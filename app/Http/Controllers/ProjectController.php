@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\ProjectRole;
 use App\Http\Requests\CreateProjectRequest;
+use App\Http\Requests\InviteEmailRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
 use App\Models\User;
@@ -93,6 +94,18 @@ class ProjectController extends Controller
 
     public function assignRole(Request $request, Project $project, User $user) {
         $this->projectService->assignRole($project, $user, $request->role);
+
+        return back();
+    }
+
+    public function invite(InviteEmailRequest $request, Project $project) {
+        $user = User::query()->where('email', $request->email)->first();
+        
+        if($project->members()->where('user_id', $user->id)->exists()) {
+            return back()->withErrors('User already joined');
+        }
+
+        $this->projectService->invite($user, $project);
 
         return back();
     }

@@ -45,4 +45,10 @@ class ProjectRepository implements ProjectRepositoryInterface
     public function assignRole(Project $project, User $user, string $role) {
         return $project->members()->updateExistingPivot($user->id, ['role' => $role]);
     }
+
+    public function invite(User $user, Project $project) {
+        return $project->members()->attach($user->id, [
+            'role' => ProjectRole::None->value,
+        ]);
+    }
 }

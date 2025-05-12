@@ -13,12 +13,15 @@
                 </div>
             </div>
 
-            <div v-if="isManager" class="flex items-center gap-4">
-                <Input class="max-w-sm" type="text" placeholder="Invite member using email" />
-                <Button size="sm">
-                    <SendIcon />
-                    Send Invitation
-                </Button>
+            <div v-if="isManager">
+                <form class="flex items-center gap-4" @submit.prevent="sendInvitation">
+                    <Input v-model="formInvite.email" class="max-w-sm" type="text" placeholder="Invite member using email" />
+                    <Button type="submit" size="sm">
+                        <SendIcon />
+                        Send Invitation
+                    </Button>
+                </form>
+                <InputError :message="formInvite.errors.email" />
             </div>
 
         </Card>
@@ -71,6 +74,7 @@
 import { Head, useForm } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import Card from '@/components/Card.vue';
+import InputError from '@/components/InputError.vue';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { SendIcon } from 'lucide-vue-next';
@@ -102,9 +106,25 @@ const formRole = useForm<{ role: string }>({
     role: ''
 });
 
+const formInvite = useForm<{ email: string }>({
+    email: ''
+});
+
 const members = props.project?.members;
 
 const { getInitials } = useInitials();
+
+function sendInvitation() {
+    formInvite.post(route('dashboard.projects.invite', props.project?.id), {
+        onSuccess: () => {
+            toast.success('Invitation sent');
+            formInvite.reset();
+        },
+        onError: (errors) => {
+            toast.error(errors.email ?? errors[0]);
+        }
+    })
+}
 
 function updateRole(userId: string, newRole:string) {
     formRole.role = newRole;

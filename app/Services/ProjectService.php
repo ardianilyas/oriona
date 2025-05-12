@@ -36,4 +36,8 @@ class ProjectService
     public function assignRole(Project $project, User $user, string $role) {
         return $this->projectRepository->assignRole($project, $user, $role);
     }
+
+    public function invite(User $user, Project $project) {
+        return $this->projectRepository->invite($user, $project);
+    }
 }

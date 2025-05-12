@@ -39,12 +39,14 @@ class DatabaseSeeder extends Seeder
 
             $randomNumber = rand(7, 10);
             $randomUsers = $availabeUsers->random(min($randomNumber, $availabeUsers->count()));
+            
 
             foreach ($randomUsers as $user) {
                 $project->members()->attach($user->id, [
                     'role' => collect(ProjectRole::cases())->random()->value,
                 ]);
             }
+            
         }
 
     }

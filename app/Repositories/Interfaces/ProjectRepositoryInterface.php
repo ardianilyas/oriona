@@ -13,4 +13,5 @@ interface ProjectRepositoryInterface
     public function update(Project $project, array $data);
     public function delete(Project $project);
     public function assignRole(Project $project, User $user, string $role);
+    public function invite(User $user, Project $project);
 }

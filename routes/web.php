@@ -20,6 +20,7 @@ Route::get('dashboard', function () {
 Route::middleware('auth')->prefix('dashboard')->name('dashboard.')->group(function () {
     Route::resource('projects', ProjectController::class);
     Route::post('projects/{project}/members/{user}/role', [ProjectController::class, 'assignRole'])->name('projects.members.role');
+    Route::post('projects/{project}/invite', [ProjectController::class, 'invite'])->name('projects.invite');
 });
 
 require __DIR__.'/settings.php';
