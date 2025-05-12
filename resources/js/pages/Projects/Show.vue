@@ -13,7 +13,7 @@
                 </div>
             </div>
 
-            <div class="flex items-center gap-4">
+            <div v-if="isManager" class="flex items-center gap-4">
                 <Input class="max-w-sm" type="text" placeholder="Invite member using email" />
                 <Button size="sm">
                     <SendIcon />
@@ -33,8 +33,9 @@
                             <TableHead>No</TableHead>
                             <TableHead>Name</TableHead>
                             <TableHead>Email</TableHead>
-                            <TableHead>Start Date</TableHead>
+                            <TableHead>Join Date</TableHead>
                             <TableHead>Jobs</TableHead>
+                            <TableHead>Action</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -43,7 +44,21 @@
                             <TableCell> {{ member?.name }} </TableCell>
                             <TableCell> {{ member?.email }} </TableCell>
                             <TableCell> {{ member?.pivot.created_at }} </TableCell>
-                            <TableCell> Backend Developer </TableCell>
+                            <TableCell> {{ member?.pivot.role }} </TableCell>
+                            <TableCell> 
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger as-child>
+                                        <Button variant="outline"> Change Role </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent>
+                                        <DropdownMenuItem 
+                                        v-for="(role, index) in roles" :key="index"
+                                        @click="updateRole(member?.id, role as string)">
+                                            {{ role }}
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>
@@ -53,7 +68,7 @@
 </template>
 
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import Card from '@/components/Card.vue';
 import { Input } from "@/components/ui/input";
@@ -68,13 +83,42 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { useInitials } from '@/composables/useInitials';
+import { toast } from 'vue-sonner';
 
 const props = defineProps({
-    project: Object
+    project: Object,
+    roles: Array,
+    isManager: Boolean,
+});
+
+const formRole = useForm<{ role: string }>({
+    role: ''
 });
 
 const members = props.project?.members;
 
 const { getInitials } = useInitials();
+
+function updateRole(userId: string, newRole:string) {
+    formRole.role = newRole;
+    formRole.post(route('dashboard.projects.members.role', {
+        project: props.project?.id,
+        user: userId
+    }), {
+        onSuccess: () => {
+            toast.success(`Role updated to ${newRole}`);
+            const member = members.find(m => m.id === userId);
+            if(member) {
+                member.pivot.role = newRole
+            }
+        }
+    });
+}
 </script>

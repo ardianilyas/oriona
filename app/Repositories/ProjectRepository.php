@@ -2,9 +2,10 @@
 
 namespace App\Repositories;
 
+use App\Models\User;
 use App\Models\Project;
-use App\Repositories\Interfaces\ProjectRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
+use App\Repositories\Interfaces\ProjectRepositoryInterface;
 
 class ProjectRepository implements ProjectRepositoryInterface
 {
@@ -32,5 +33,9 @@ class ProjectRepository implements ProjectRepositoryInterface
     public function delete(Project $project)
     {
         return $project->delete();
+    }
+
+    public function assignRole(Project $project, User $user, string $role) {
+        return $project->members()->updateExistingPivot($user->id, ['role' => $role]);
     }
 }

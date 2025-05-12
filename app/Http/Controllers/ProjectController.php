@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ProjectRole;
 use App\Http\Requests\CreateProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
+use App\Models\User;
 use App\Services\ProjectService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -51,7 +53,14 @@ class ProjectController extends Controller
     public function show(Project $project)
     {
         $project->load(['creator', 'members']);
-        return inertia('Projects/Show', compact('project'));
+
+        $roles = ProjectRole::cases();
+
+        $user = Auth::user();
+
+        $isManager = $project->isManager($user);
+
+        return inertia('Projects/Show', compact('project', 'roles', 'isManager'));
     }
 
     /**
@@ -78,6 +87,12 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
         $this->projectService->deleteProject($project);
+
+        return back();
+    }
+
+    public function assignRole(Request $request, Project $project, User $user) {
+        $this->projectService->assignRole($project, $user, $request->role);
 
         return back();
     }

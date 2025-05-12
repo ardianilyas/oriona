@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Enums\ProjectRole;
 use App\Models\Project;
 use App\Models\ProjectMember;
 use Illuminate\Notifications\Notifiable;
@@ -48,6 +49,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'pivot.role' => ProjectRole::class,
             'password' => 'hashed',
         ];
     }

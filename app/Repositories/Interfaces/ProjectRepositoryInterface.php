@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Interfaces;
 
+use App\Models\User;
 use App\Models\Project;
 
 interface ProjectRepositoryInterface
@@ -11,4 +12,5 @@ interface ProjectRepositoryInterface
     public function create(array $data);
     public function update(Project $project, array $data);
     public function delete(Project $project);
+    public function assignRole(Project $project, User $user, string $role);
 }

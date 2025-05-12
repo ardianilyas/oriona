@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ProjectRole;
 use App\Models\Project;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -29,8 +30,13 @@ class DatabaseSeeder extends Seeder
         User::factory(100)->has(Project::factory(20))->create();
         
         foreach ($projects as $project) {
+            $project->members()->attach($user->id, [
+                'role' => ProjectRole::Admin->value,
+            ]);
             for($i = 0; $i < rand(7, 10); $i++) {
-                $project->members()->attach(User::all()->random()->id);
+                $project->members()->attach(User::all()->random()->id, [
+                    'role' => collect(ProjectRole::cases())->random()->value,
+                ]);
             }
         }
 

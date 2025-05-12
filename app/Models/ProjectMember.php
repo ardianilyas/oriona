@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ProjectRole;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\Pivot;
@@ -17,6 +18,7 @@ class ProjectMember extends Pivot
     public function casts(): array {
         return [
             'created_at' => 'datetime: l, d F Y H:i:s',
+            'role' => ProjectRole::class,
         ];
     }
 }

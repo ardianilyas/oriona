@@ -2,6 +2,7 @@
         
 namespace App\Services;
 
+use App\Models\User;
 use App\Models\Project;
 use App\Repositories\ProjectRepository;
 
@@ -30,5 +31,9 @@ class ProjectService
 
     public function deleteProject(Project $project) {
         return $this->projectRepository->delete($project);
+    }
+
+    public function assignRole(Project $project, User $user, string $role) {
+        return $this->projectRepository->assignRole($project, $user, $role);
     }
 }

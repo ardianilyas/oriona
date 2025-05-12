@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ProjectRole;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -31,7 +32,16 @@ class Project extends Model
         return $this->belongsToMany(User::class, 'project_members')
             ->withPivot(['role'])
             ->withTimestamps()
-            ->using(ProjectMember::class);
+            ->using(ProjectMember::class)
+            ->orderBy('created_at', 'asc');
+    }
+
+    public function isManager(User $user): bool {
+        $managerRole = [ProjectRole::Admin, ProjectRole::ProjectManager];
+
+        $member = $this->members()->where('user_id', $user->id)->first();
+        
+        return $member && in_array($member->pivot->role, $managerRole);
     }
 
     public function tasks(): HasMany {
