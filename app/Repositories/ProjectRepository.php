@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Enums\ProjectRole;
 use App\Models\User;
 use App\Models\Project;
 use Illuminate\Support\Facades\Auth;
@@ -19,9 +20,15 @@ class ProjectRepository implements ProjectRepositoryInterface
         return $project;
     }
 
-    public function create(array $data)
+    public function create(array $data, User $user)
     {
-        return Project::create($data);
+        $project = Project::create($data);
+        
+        $project->members()->attach($user->id, [
+            'role' => ProjectRole::Admin->value,
+        ]);
+
+        return $project;
     }
 
     public function update(Project $project, array $data)

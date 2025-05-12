@@ -21,8 +21,8 @@ class ProjectService
         return $this->projectRepository->find($project);
     }
 
-    public function createProject(array $data) {
-        return $this->projectRepository->create($data);
+    public function createProject(array $data, User $user) {
+        return $this->projectRepository->create($data, $user);
     }
 
     public function updateProject(Project $project, array $data) {

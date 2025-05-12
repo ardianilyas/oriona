@@ -33,8 +33,15 @@ class DatabaseSeeder extends Seeder
             $project->members()->attach($user->id, [
                 'role' => ProjectRole::Admin->value,
             ]);
-            for($i = 0; $i < rand(7, 10); $i++) {
-                $project->members()->attach(User::all()->random()->id, [
+
+            $existingMembersId = $project->members()->pluck('user_id')->toArray();
+            $availabeUsers = User::query()->whereNotIn('id', $existingMembersId)->get();
+
+            $randomNumber = rand(7, 10);
+            $randomUsers = $availabeUsers->random(min($randomNumber, $availabeUsers->count()));
+
+            foreach ($randomUsers as $user) {
+                $project->members()->attach($user->id, [
                     'role' => collect(ProjectRole::cases())->random()->value,
                 ]);
             }

@@ -42,7 +42,7 @@ class ProjectController extends Controller
         $data = $request->validated();
         $data['user_id'] = Auth::id();
 
-        $this->projectService->createProject($data);
+        $this->projectService->createProject($data, Auth::user());
 
         return redirect()->route('dashboard.projects.index');
     }
