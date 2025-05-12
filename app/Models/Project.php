@@ -33,7 +33,7 @@ class Project extends Model
             ->withPivot(['role'])
             ->withTimestamps()
             ->using(ProjectMember::class)
-            ->orderBy('created_at', 'asc');
+            ->orderBy('project_members.role', 'asc');
     }
 
     public function isManager(User $user): bool {
